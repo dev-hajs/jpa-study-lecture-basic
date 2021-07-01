@@ -1,6 +1,5 @@
 package hellojpa;
 
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -17,33 +16,15 @@ public class JpaMain {
         tx.begin();
 
         try {
-            // insert
-//            Member member = new Member();
-//            member.setId(2L);
-//            member.setName("HelloB");
-//            em.persist(member);
+            // 비영속
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            // select
-//            Member findMember = em.find(Member.class, 1L);
-//            System.out.println("findMember.id = " + findMember.getId());
-//            System.out.println("findMember.name = " + findMember.getName());
-
-            // delete
-//            Member findMember = em.find(Member.class, 1L);
-//            em.remove(findMember);
-
-            // update (java collection 처럼 작동하기 때문에 em.persist() 를 하지 않아도 된다!)
-//            Member findMember = em.find(Member.class, 1L);
-//            findMember.setName("HelloJPA");
-
-            // JPQL
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                .setFirstResult(1)
-                .setMaxResults(10)
-                .getResultList();
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
+            // 영속
+            System.out.println("=== BEFORE ===");
+            em.persist(member);
+            System.out.println("=== AFTER ===");
 
             tx.commit();
         } catch (Exception e) {
