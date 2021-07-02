@@ -17,8 +17,8 @@
             <property name="hibernate.show_sql" value="true"/> <!-- query 노출여부 -->
             <property name="hibernate.format_sql" value="true"/> <!-- query pretty formatting -->
             <property name="hibernate.use_sql_comments" value="true"/> <!-- query 주석(호출라인) 노출여부 -->
-            <!-- <property name="hibernate.jdbc.batch_size" value="10"/> 이 사이즈만큼 모아서 database 에 한 번의 네트워크로 보내서 update (=버퍼링) -->
-            <!-- <property name="hibernate.hbm2ddl.auto" value="create"/> -->
+            <property name="hibernate.jdbc.batch_size" value="10"/> <!-- 이 사이즈만큼 모아서 database 에 한 번의 네트워크로 보내서 update (=버퍼링) -->
+            <property name="hibernate.hbm2ddl.auto" value="create"/> <!-- create:애플리케이션 실행 시점에 DDL 을 자동 생성, none:없는 옵션이라 실행되지 않음 -->
         </properties>
     </persistence-unit>
 </persistence>
