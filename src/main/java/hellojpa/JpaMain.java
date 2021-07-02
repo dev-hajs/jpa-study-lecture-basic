@@ -16,12 +16,27 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setId(3L);
-            member.setUserName("C");
-            member.setRoleType(RoleType.GUEST);
 
-            em.persist(member);
+            Member member1 = new Member();
+            member1.setUserName("A");
+
+            Member member2 = new Member();
+            member2.setUserName("B");
+
+            Member member3 = new Member();
+            member3.setUserName("C");
+
+            System.out.println("=================");
+
+            em.persist(member1); // 1, 51
+            em.persist(member2); // memory
+            em.persist(member3); // memory
+
+            System.out.println("member1 = " + member1.getId());
+            System.out.println("member2 = " + member2.getId());
+            System.out.println("member3 = " + member3.getId());
+
+            System.out.println("=================");
 
             tx.commit();
         } catch (Exception e) {
