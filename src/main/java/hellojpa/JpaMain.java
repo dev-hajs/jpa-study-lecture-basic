@@ -1,5 +1,6 @@
 package hellojpa;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -24,22 +25,19 @@ public class JpaMain {
 
             Member member = new Member();
             member.setUserName("member1");
-//            member.setTeamId(team.getId()); //-> '객체지향'스럽지 않은 코드!
             member.setTeam(team);
             em.persist(member);
 
-            /*
-            * 1차 캐시가 아닌 DB 에서 조회하는걸 보고 있다면..
+            // 1차 캐시가 아닌 DB 에서 조회하는걸 보고 싶다면..
             em.flush();
             em.clear();
-            */
 
             // select
             Member findMember = em.find(Member.class, member.getId());
-//            Long findTeamId = findMember.getTeamId(); //-> '객체지향'스럽지 않은 코드!
-//            Team findTeam = em.find(Team.class, findTeamId);
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam.name = " + findTeam.getName());
+            List<Member> members = findMember.getTeam().getMembers();
+            for (Member m : members) {
+                System.out.println("m.name = " + m.getUserName());
+            }
 
             tx.commit();
         } catch (Exception e) {

@@ -17,7 +17,7 @@ public class Member {
     @Column(name = "USERNAME")
     private String userName;
 
-//    @Column(name = "TEAM_ID")
+//    @Column(name = "eTEAM_ID")
 //    private Long teamId;
 
     @ManyToOne
