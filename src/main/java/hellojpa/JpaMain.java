@@ -25,19 +25,24 @@ public class JpaMain {
 
             Member member = new Member();
             member.setUserName("member1");
-            member.setTeam(team);
+//            member.setTeam(team);
+//            member.changeTeam(team); // member 에 team 을 세팅하는 메소드를 활용하거나
             em.persist(member);
 
-            // 1차 캐시가 아닌 DB 에서 조회하는걸 보고 싶다면..
+            team.addMember(member); // team 에 member 를 세팅하는 메소드를 사용해서 해결하자. (연관관계 편의 메소드)
+
             em.flush();
             em.clear();
 
-            // select
-            Member findMember = em.find(Member.class, member.getId());
-            List<Member> members = findMember.getTeam().getMembers();
+            Team findTeam = em.find(Team.class, team.getId());
+            List<Member> members = findTeam.getMembers();
+
+            System.out.println("=========");
+
             for (Member m : members) {
-                System.out.println("m.name = " + m.getUserName());
+                System.out.println("m = " + m.getUserName());
             }
+            System.out.println("=========");
 
             tx.commit();
         } catch (Exception e) {

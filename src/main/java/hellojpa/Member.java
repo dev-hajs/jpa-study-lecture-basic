@@ -17,7 +17,7 @@ public class Member {
     @Column(name = "USERNAME")
     private String userName;
 
-//    @Column(name = "eTEAM_ID")
+//    @Column(name = "TEAM_ID")
 //    private Long teamId;
 
     @ManyToOne
@@ -47,4 +47,9 @@ public class Member {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+//    public void changeTeam(Team team) {
+//        this.team = team;
+//        team.getMembers().add(this);
+//    }
 }
