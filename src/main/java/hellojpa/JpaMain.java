@@ -17,26 +17,29 @@ public class JpaMain {
 
         try {
 
-            Member member1 = new Member();
-            member1.setUserName("A");
+            // insert
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-            Member member2 = new Member();
-            member2.setUserName("B");
+            Member member = new Member();
+            member.setUserName("member1");
+//            member.setTeamId(team.getId()); //-> '객체지향'스럽지 않은 코드!
+            member.setTeam(team);
+            em.persist(member);
 
-            Member member3 = new Member();
-            member3.setUserName("C");
+            /*
+            * 1차 캐시가 아닌 DB 에서 조회하는걸 보고 있다면..
+            em.flush();
+            em.clear();
+            */
 
-            System.out.println("=================");
-
-            em.persist(member1); // 1, 51
-            em.persist(member2); // memory
-            em.persist(member3); // memory
-
-            System.out.println("member1 = " + member1.getId());
-            System.out.println("member2 = " + member2.getId());
-            System.out.println("member3 = " + member3.getId());
-
-            System.out.println("=================");
+            // select
+            Member findMember = em.find(Member.class, member.getId());
+//            Long findTeamId = findMember.getTeamId(); //-> '객체지향'스럽지 않은 코드!
+//            Team findTeam = em.find(Team.class, findTeamId);
+            Team findTeam = findMember.getTeam();
+            System.out.println("findTeam.name = " + findTeam.getName());
 
             tx.commit();
         } catch (Exception e) {
