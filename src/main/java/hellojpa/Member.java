@@ -17,11 +17,9 @@ public class Member {
     @Column(name = "USERNAME")
     private String userName;
 
-//    @Column(name = "TEAM_ID")
-//    private Long teamId;
-
+    // 읽기 전용 필드를 사용하여 일대다 양방향처럼 동작하도록 할 수 있다.
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
     private Team team;
 
     public Long getId() {
@@ -39,17 +37,4 @@ public class Member {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-//    public void changeTeam(Team team) {
-//        this.team = team;
-//        team.getMembers().add(this);
-//    }
 }

@@ -1,6 +1,5 @@
 package hellojpa;
 
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -18,31 +17,14 @@ public class JpaMain {
 
         try {
 
-            // insert
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
-
             Member member = new Member();
             member.setUserName("member1");
-//            member.setTeam(team);
-//            member.changeTeam(team); // member 에 team 을 세팅하는 메소드를 활용하거나
             em.persist(member);
 
-            team.addMember(member); // team 에 member 를 세팅하는 메소드를 사용해서 해결하자. (연관관계 편의 메소드)
-
-            em.flush();
-            em.clear();
-
-            Team findTeam = em.find(Team.class, team.getId());
-            List<Member> members = findTeam.getMembers();
-
-            System.out.println("=========");
-
-            for (Member m : members) {
-                System.out.println("m = " + m.getUserName());
-            }
-            System.out.println("=========");
+            Team team = new Team();
+            team.setName("teamA");
+            team.getMembers().add(member); // fk(team_id) 를 업데이트 해줘야 하기 때문에 member update 쿼리가 하나 더 나간다. 성능이 좋다고 할 수 없음.
+            em.persist(team);
 
             tx.commit();
         } catch (Exception e) {
