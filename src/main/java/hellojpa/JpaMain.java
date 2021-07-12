@@ -17,14 +17,21 @@ public class JpaMain {
 
         try {
 
-            Member member = new Member();
-            member.setUserName("member1");
-            em.persist(member);
+            Movie movie = new Movie();
+            movie.setDirector("aaaa");
+            movie.setActor("bbbb");
+            movie.setName("바람과함께사라지다");
+            movie.setPrice(10000);
 
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member); // fk(team_id) 를 업데이트 해줘야 하기 때문에 member update 쿼리가 하나 더 나간다. 성능이 좋다고 할 수 없음.
-            em.persist(team);
+            em.persist(movie);
+
+            em.flush();
+            em.clear();
+
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+//            System.out.println("findMovie = " + findMovie);
+            Item findItem = em.find(Item.class, movie.getId());
+            System.out.println("findItem = " + findItem);
 
             tx.commit();
         } catch (Exception e) {
