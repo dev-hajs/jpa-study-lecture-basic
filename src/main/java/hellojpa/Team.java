@@ -1,5 +1,6 @@
 package hellojpa;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -10,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Team {
+public class Team extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "TEAM_ID")
