@@ -2,6 +2,7 @@ package hellojpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -18,8 +19,8 @@ public class Member extends BaseEntity {
     private String userName;
 
     // 읽기 전용 필드를 사용하여 일대다 양방향처럼 동작하도록 할 수 있다.
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Team team;
 
     public Long getId() {

@@ -1,12 +1,10 @@
 package hellojpa;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnitUtil;
-import org.hibernate.Hibernate;
-import org.hibernate.jpa.internal.PersistenceUnitUtilImpl;
 
 public class JpaMain {
 
@@ -20,33 +18,34 @@ public class JpaMain {
 
         try {
 
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            em.persist(teamB);
+
             Member member1 = new Member();
-            member1.setUserName("hello1");
+            member1.setUserName("member1");
+            member1.setTeam(team);
             em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUserName("member2");
+            member2.setTeam(teamB);
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            // proxy, entity 비교 (==, instance of)
-//            Member refMember = em.getReference(Member.class, member1.getId());
-//            System.out.println("refMember = " + refMember.getClass()); // proxy
-//            Member findMember = em.find(Member.class, member1.getId());
-//            System.out.println("findMember = " + findMember.getClass()); // member
-//            System.out.println("a == a:" + (refMember == findMember)); // 성립x. 따라서 findMember 도 proxy 로 변환됩니다.
+            List<Member> members = em.createQuery("SELECT m FROM Member m join fetch m.team", Member.class).getResultList();
 
-            // 영속성 컨텍스트에 없는(준영속 상태의) proxy 초기화 -> 예외 발생 확인
-//            Member refMember = em.getReference(Member.class, member1.getId());
-//            System.out.println("refMember.getClass() = " + refMember.getClass()); // proxy
-//            em.detach(refMember);
-//            em.clear();
-//            refMember.getUserName();
-
-            Member refMember = em.getReference(Member.class, member1.getId());
-            System.out.println("refMember.getClass() = " + refMember.getClass()); // proxy
-//            refMember.getUserName(); // proxy 강제 초기화 - 1
-//            Hibernate.initialize(refMember); // proxy 강제 초기화 - 2
-            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
-
+//            Member m = em.find(Member.class, member1.getId());
+//            System.out.println("m.getTeam().getClass() = " + m.getTeam().getClass());
+//            System.out.println(">>>>>>>>>>>>>>");
+//            System.out.println("m.getTeam().getName() = " + m.getTeam().getName());
+//            System.out.println(">>>>>>>>>>>>>>");
 
             tx.commit();
         } catch (Exception e) {
