@@ -18,24 +18,12 @@ public class JpaMain {
 
         try {
 
-            Child child1 = new Child();
-            Child child2 = new Child();
+            Member member = new Member();
+            member.setUserName("hello");
+            member.setHomeAddress(new Address("city", "street", "10000"));
+            member.setWorkPeriod(new Period());
 
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            em.persist(parent);
-            // Member @OneToMany 에 `cascade = CascadeType.ALL` 속성읇 부여함으로써 해결
-//            em.persist(child1);
-//            em.persist(child2);
-
-            em.flush();
-            em.clear();
-
-            Parent findParent = em.find(Parent.class, parent.getId());
-            em.remove(findParent);
-//            findParent.getChildList().remove(0);
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {
