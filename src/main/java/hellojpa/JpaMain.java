@@ -1,6 +1,5 @@
 package hellojpa;
 
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -18,12 +17,27 @@ public class JpaMain {
 
         try {
 
+            // 임베디드 타입 같은 값 타입을 여러 엔티티에서 공유하면 위험한 case 테스트
+            Address address = new Address("city", "street", "10000");
             Member member = new Member();
-            member.setUserName("hello");
-            member.setHomeAddress(new Address("city", "street", "10000"));
-            member.setWorkPeriod(new Period());
-
+            member.setUserName("member1");
+            member.setHomeAddress(address);
             em.persist(member);
+
+
+//            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+//            Member member2 = new Member();
+//            member2.setUserName("member2");
+//            member2.setHomeAddress(address);
+//            member2.setHomeAddress(copyAddress);
+//            em.persist(member2);
+
+            //
+//            member.getHomeAddress().setCity("newCity"); // 불변객체로 만듦으로써 side effect 를 잡을 수 있다.
+
+            // 그럼 기존에 address 값을 바꾸기 위해서는? 인스턴스를 새로 만들어서 통째로 바꿔줘야 한다.
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+            member.setHomeAddress(newAddress);
 
             tx.commit();
         } catch (Exception e) {
