@@ -1,11 +1,13 @@
 package hellojpa;
 
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 public class JpaMain {
 
@@ -19,53 +21,48 @@ public class JpaMain {
 
         try {
 
-            // 값 타입 저장 예제
+            /* JPQL START */
+            // JPQL
+//            List<Member> resultList = em.createQuery(
+//                "SELECT m FROM Member m WHERE m.userName like '%kim%'"
+//                , Member.class
+//            ).getResultList();
+//
+//            for (Member member : resultList) {
+//                System.out.println("member = " + member);
+//            }
+            /* JPQL END */
+
+            /* Criteria START */
+            // Criteria 시작
+//            CriteriaBuilder cb = em.getCriteriaBuilder();
+//            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+//
+              // 루트 클래스 (조회를 시작할 클래스)
+//            Root<Member> m = query.from(Member.class);
+//
+              // (동적)쿼리 생성
+//            CriteriaQuery<Member> cq = query.select(m);
+//
+//            String userName = "asfasf";
+//            if (userName != null) {
+//                cq = cq.where(cb.equal(m.get("userName"), "kim"));
+//            }
+//            List<Member> resultList = em.createQuery(cq).getResultList();
+            /* Criteria END */
+
+            /* NativeQuery START */
+//            em.createNativeQuery("SELECT MEMBER_ID, city, street, zipcode, USERNAME FROM MEMBER").getResultList();
+            /* NativeQuery END */
+
             Member member = new Member();
             member.setUserName("member1");
-            member.setHomeAddress(new Address("homeCity", "street", "10000"));
-
-            member.getFavorateFoods().add("치킨");
-            member.getFavorateFoods().add("족발");
-            member.getFavorateFoods().add("피자");
-
-//            member.getAddressHistory().add(new Address("old1", "street", "10000"));
-//            member.getAddressHistory().add(new Address("old2", "street", "10000"));
-
             em.persist(member);
-
-            em.flush();
-            em.clear();
-
-            // 값 타입 조회 예제
-            System.out.println("========= START ==========");
-            Member findMember = em.find(Member.class, member.getId());
-//            List<Address> addressHistory = findMember.getAddressHistory();
-//            for (Address address : addressHistory) {
-//                System.out.println("address = " + address.getCity());
-//            }
-
-            Set<String> favorateFoods = findMember.getFavorateFoods();
-            for (String favorateFood : favorateFoods) {
-                System.out.println("favorateFood = " + favorateFood);
+            // flush 되는 시점 -> commit, query
+            List<Member> resultList = em.createNativeQuery("SELECT MEMBER_ID, city, street, zipcode, USERNAME FROM MEMBER", Member.class).getResultList();
+            for (Member member1 : resultList) {
+                System.out.println("member1 = " + member1);
             }
-
-            // 값 타입 수정 예제 (homeCity -> newCity)
-            System.out.println("========= START ==========");
-//            findMember.getHomeAddress().setCity("newCity"); // 이렇게 하면 안된다. 이전시간에 배웠듯이 side effect 가 발생할 수 있기 때문에 값 타입은 immutable 해야 한다.
-            Address oldAddress = findMember.getHomeAddress();
-            findMember.setHomeAddress(new Address("newCity", oldAddress.getStreet(), oldAddress.getZipcode()));
-
-            // 값 타입 수정 예제 (치킨 -> 한식)
-            findMember.getFavorateFoods().remove("치킨");
-            findMember.getFavorateFoods().add("한식");
-                // delete -> insert
-
-            // 값 타입 수정 예제 (old1 -> newCity1)
-//            findMember.getAddressHistory().remove(new Address("old1", "street", "10000")); // equals 를 기반으로 찾아서 제거해준다.
-//            findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
-            findMember.getAddressHistory().remove(new AddressEntity("old1", "street", "10000")); // equals 를 기반으로 찾아서 제거해준다.
-            findMember.getAddressHistory().add(new AddressEntity("newCity1", "street", "10000"));
-                // delete -> insert, insert (테이블을 통으로 업데이트 했다!!)
 
             tx.commit();
         } catch (Exception e) {
